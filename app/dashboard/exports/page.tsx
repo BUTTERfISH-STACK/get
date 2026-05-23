@@ -1,75 +1,33 @@
 "use client";
 
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
-import { PDFResumeTemplate } from "@/components/PDFResumeTemplate";
-import { ParsedResume } from "@/types/resume";
-
-// Dynamically import PDFDownloadLink to avoid server-side prerender errors
-// (react-pdf is browser-only)
-const PDFDownloadLink = dynamic(
-  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
-  { ssr: false }
-);
-
-const sampleResume: ParsedResume = {
-  personal: {
-    fullName: "Alex Rivera",
-    email: "alex@rivera.dev",
-    phone: "+1 (415) 555-0192",
-    location: "San Francisco, CA",
-    linkedin: "linkedin.com/in/alexrivera",
-  },
-  summary: "Senior Software Engineer with 8 years building scalable AI infrastructure at leading tech companies.",
-  experience: [{
-    company: "Vercel",
-    role: "Senior Software Engineer",
-    startDate: "2021",
-    endDate: "Present",
-    bullets: [
-      "Architected and shipped AI-powered deployment platform used by 40k+ developers",
-      "Improved build times by 67% through intelligent caching and parallelization",
-    ],
-  }],
-  education: [{ institution: "Stanford", degree: "M.S. Computer Science", startDate: "2016", endDate: "2018" }],
-  skills: ["TypeScript", "React", "Go", "Kubernetes", "LLMs"],
-};
+import React from "react";
+import Link from "next/link";
+import { FileText, Download } from "lucide-react";
 
 export default function ExportCenter() {
-  const [isPro] = useState(true); // In real app pull from subscription
-
   return (
     <div className="max-w-2xl mx-auto">
       <h1 className="text-5xl font-semibold tracking-[-1.5px] mb-4">Export Center</h1>
-      <p className="text-xl text-[#a1a1aa]">Download pixel-perfect, ATS-safe, recruiter-grade PDFs.</p>
+      <p className="text-xl text-[#a1a1aa]">Download pixel-perfect, ATS-safe PDFs of your optimized resumes.</p>
 
-      <div className="mt-12 card">
-        <div className="font-semibold text-xl mb-2">Current Version — Executive Modern</div>
-        <div className="text-sm text-[#a1a1aa]">ATS Score 94 • Generated 2 hours ago</div>
-
-        <div className="mt-8 flex gap-4">
-          <PDFDownloadLink
-            document={<PDFResumeTemplate resume={sampleResume} isWatermarked={!isPro} />}
-            fileName="Alex_Rivera_Executive.pdf"
-          >
-            {({ loading }) => (
-              <button disabled={loading} className="btn-gold flex-1 py-4 rounded-2xl text-lg font-semibold">
-                {loading ? "Generating PDF..." : "Download Clean PDF (Pro)"}
-              </button>
-            )}
-          </PDFDownloadLink>
-
-          <button 
-            onClick={() => alert("In production this triggers Stripe upgrade flow.")}
-            className="btn-ghost flex-1 py-4 rounded-2xl"
-          >
-            Upgrade for Watermark-Free
-          </button>
+      <div className="mt-12 card text-center py-16">
+        <div className="mx-auto w-14 h-14 rounded-full bg-white/5 flex items-center justify-center mb-6">
+          <Download className="w-7 h-7 text-[#C5A46E]" />
         </div>
+        <h2 className="text-2xl font-semibold tracking-tight mb-3">No exports yet</h2>
+        <p className="text-[#a1a1aa] max-w-sm mx-auto mb-8">
+          Once you optimize a resume and export it, your downloads will appear here with version history.
+        </p>
+        <Link 
+          href="/dashboard/upload" 
+          className="btn-gold px-8 py-3 rounded-2xl inline-flex items-center gap-2"
+        >
+          <FileText className="w-4 h-4" /> Go to Upload &amp; Optimize
+        </Link>
       </div>
 
       <div className="text-xs text-[#71717a] mt-8 text-center">
-        Exports are generated client-side using @react-pdf/renderer for pixel-perfect output. No server roundtrips.
+        Exports are generated client-side using @react-pdf/renderer. Clean, professional, ATS-safe.
       </div>
     </div>
   );

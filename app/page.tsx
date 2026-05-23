@@ -176,7 +176,7 @@ export default function VellonLanding() {
               href="#demo" 
               className="btn-ghost flex items-center justify-center gap-3 px-10 py-4 rounded-2xl text-lg font-medium w-full sm:w-auto"
             >
-              Watch 47-second demo
+              See how it works
             </a>
           </div>
 
@@ -234,8 +234,8 @@ export default function VellonLanding() {
       <section id="demo" className="border-y border-white/10 bg-[#111111] py-20">
         <div className="max-w-4xl mx-auto px-8">
           <div className="text-center mb-10">
-            <div className="text-[#C5A46E] text-xs tracking-[3px]">LIVE DEMO</div>
-            <h3 className="text-4xl font-semibold tracking-tight mt-2">See the ATS Engine in action</h3>
+            <div className="text-[#C5A46E] text-xs tracking-[3px]">INTELLIGENCE IN ACTION</div>
+            <h3 className="text-4xl font-semibold tracking-tight mt-2">Real ATS Analysis Example</h3>
           </div>
 
           <div className="glass rounded-3xl p-10">
