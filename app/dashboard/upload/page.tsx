@@ -69,7 +69,7 @@ export default function CVUploadPage() {
     } catch (e: any) {
       console.error("Ollama call failed:", e);
       const errorMsg = e?.message || "Unknown error";
-      setError(`Failed to analyze. ${errorMsg}. Make sure OLLAMA_BASE_URL and OLLAMA_API_KEY are correctly set.`);
+      setError(`Failed to analyze: ${errorMsg}\n\nMake sure your OLLAMA_BASE_URL is correct and reachable.`);
     } finally {
       setIsProcessing(false);
     }

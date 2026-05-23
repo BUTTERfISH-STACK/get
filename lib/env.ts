@@ -19,8 +19,8 @@ const envSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_STORAGE_BUCKET: z.string().default("resumes"),
 
-  // Ollama AI (required at RUNTIME for AI features to work)
-  // During build these can be empty — we validate at call time instead.
+  // Ollama AI
+  // OLLAMA_API_KEY is optional — you can run a completely open Ollama without any key.
   OLLAMA_BASE_URL: z.string().url().default("http://localhost:11434"),
   OLLAMA_API_KEY: z.string().optional(),
   OLLAMA_MODEL_FAST: z.string().default("qwen2.5:7b"),

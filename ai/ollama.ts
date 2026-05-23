@@ -71,11 +71,11 @@ export function getOptimalModel(task: TaskType | string): string {
 }
 
 // Core secure fetch wrapper to Ollama
+// API key is now optional — allows connecting to open, unauthenticated Ollama instances
 async function ollamaFetch(endpoint: string, body: any, stream = false) {
-  if (!env.OLLAMA_API_KEY) {
+  if (!env.OLLAMA_BASE_URL) {
     throw new Error(
-      "Vellon AI is not connected to an Ollama server. " +
-      "Please set OLLAMA_BASE_URL and OLLAMA_API_KEY in your environment to enable AI features."
+      "OLLAMA_BASE_URL is not configured. Please set it to your Ollama server address."
     );
   }
 
@@ -83,14 +83,20 @@ async function ollamaFetch(endpoint: string, body: any, stream = false) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 120000); // 2min timeout
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "X-Vellon-Client": "production",
+  };
+
+  // Only send Authorization if an API key is provided
+  if (env.OLLAMA_API_KEY) {
+    headers["Authorization"] = `Bearer ${env.OLLAMA_API_KEY}`;
+  }
+
   try {
     const res = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${env.OLLAMA_API_KEY}`,
-        "X-Vellon-Client": "production",
-      },
+      headers,
       body: JSON.stringify(body),
       signal: controller.signal,
     });

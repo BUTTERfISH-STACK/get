@@ -37,7 +37,7 @@ export default function AICareerCoach() {
       }
     } catch (e: any) {
       const msg = e?.message || "Could not reach Ollama server.";
-      setMessages(prev => [...prev, { role: "assistant", content: `Error: ${msg}\n\nPlease check that OLLAMA_BASE_URL and OLLAMA_API_KEY are set correctly in your environment.` }]);
+      setMessages(prev => [...prev, { role: "assistant", content: `Error: ${msg}\n\nPlease check that your OLLAMA_BASE_URL is set correctly and the server is reachable (no API key required if your Ollama is open).` }]);
     } finally {
       setIsStreaming(false);
     }
