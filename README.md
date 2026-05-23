@@ -1,36 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vellon AI — Production-Ready SaaS
 
-## Getting Started
+**The premium, open-source-AI-powered career intelligence platform.**
 
-First, run the development server:
+Vellon helps ambitious professionals optimize resumes for ATS, redesign them into beautiful premium layouts, match jobs, generate cover letters, and receive elite AI career coaching — all powered by your private Ollama instance.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Built to rival (and beat) Resume.io, Rezi, Teal, and Kickresume with better UX, real open models, and true privacy.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack (Production)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend**: Next.js 16 (App Router) + TypeScript + Tailwind 4 + Framer Motion + Shadcn-style primitives
+- **Auth**: Clerk (enterprise-ready)
+- **Database**: Prisma + PostgreSQL (Supabase / Neon recommended)
+- **Storage**: Supabase Storage (original CVs)
+- **AI Brain**: Ollama (qwen2.5:7b, llama3.1, deepseek, mistral, codellama) — self-hosted
+- **PDF**: @react-pdf/renderer (pixel-perfect, ATS-safe)
+- **Payments**: Stripe (subscriptions + webhooks)
+- **Email**: Resend
+- **Analytics**: PostHog
+- **Deployment**: Vercel (frontend) + Ubuntu/Docker (Ollama)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Getting Started Locally (5 minutes)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone & Install**
+   ```bash
+   git clone <your-repo>
+   cd vellon-ai
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Environment**
+   ```bash
+   cp .env .env.local
+   # Fill in Clerk keys, Supabase, Ollama URL + key, Stripe, etc.
+   ```
 
-## Deploy on Vercel
+3. **Database**
+   ```bash
+   npx prisma db push          # or migrate dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Run**
+   ```bash
+   npm run dev
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Visit http://localhost:3000 — beautiful landing + full dashboard ready.
+
+**Important**: You must have a running Ollama server (see `OLLAMA_DEPLOY.md`).
+
+---
+
+## Production Deployment
+
+### Vercel (Frontend)
+
+1. Push to GitHub
+2. Import on Vercel
+3. Add all environment variables from `.env`
+4. Deploy
+
+### Ollama Server
+
+Follow the complete guide in `OLLAMA_DEPLOY.md`
+
+- Docker + GPU
+- API key auth
+- All 5 required models pre-pulled
+- HTTPS reverse proxy
+
+---
+
+## Key Features Implemented (Fully Working)
+
+- Stunning premium landing page (Linear/Vercel quality)
+- Clerk authentication + user sync to Prisma
+- Real PDF/DOCX/TXT parsing
+- Real Ollama AI streaming (ATS scoring, career chat, job matching)
+- Intelligent model routing
+- ATS scoring with beautiful animated UI
+- Professional @react-pdf/renderer exports (with watermark control)
+- Full dashboard + sidebar + multiple flows
+- AI Career Coach with real streaming responses
+- Job matcher with live analysis
+- Production Prisma schema (all tables, indexes, relations)
+- Rate limiting ready + security headers
+
+---
+
+## Next (Easy to Extend)
+
+- Full multi-version CV generator wizard
+- Stripe checkout + webhooks
+- Cover letter generator
+- Resume versioning + history
+- Enterprise team features
+
+Everything is architected for scale and maintainability by senior engineers.
+
+---
+
+## License & Philosophy
+
+Built for the ambitious. Private. Open weights. Yours.
+
+---
+
+Questions? Open an issue or reach out.
+
+Vellon AI — 2026

@@ -1,26 +1,231 @@
+/* ============================================
+   VELLON AI — PREMIUM DESIGN SYSTEM
+   Black / Gold / Glassmorphism / Futuristic
+   ============================================ */
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Elite Color Palette */
+  --bg: #0a0a0a;
+  --bg-elevated: #111111;
+  --bg-subtle: #1a1a1a;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+
+  --gold: #C5A46E;
+  --gold-light: #D4B78A;
+  --gold-dark: #A37F3D;
+
+  --text: #ededed;
+  --text-muted: #a1a1aa;
+  --text-subtle: #71717a;
+
+  --success: #22c55e;
+  --warning: #eab308;
+  --error: #ef4444;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --radius-lg: 24px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base */
+html {
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+/* Premium Glassmorphism */
+.glass {
+  background: rgba(17, 17, 17, 0.75);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-strong {
+  background: rgba(17, 17, 17, 0.92);
+  border: 1px solid var(--border-strong);
+  backdrop-filter: blur(30px);
+}
+
+/* Gold Accents */
+.gold-text {
+  color: var(--gold);
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  color: #0a0a0a;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.23, 1.0, 0.32, 1);
+}
+
+.btn-gold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px -10px rgba(197, 164, 110, 0.3);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  transition: all 0.15s ease;
+}
+
+.btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* Modern Cards */
+.card {
+  @apply glass rounded-3xl p-8 transition-all duration-300;
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+/* Animated Score Circle (ATS) */
+.score-circle {
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Smooth AI Loading */
+.ai-loader {
+  animation: pulse-gold 1.8s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+}
+
+@keyframes pulse-gold {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* Premium Inputs */
+.input-premium {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+}
+
+.input-premium:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 4px rgba(197, 164, 110, 0.08);
+  outline: none;
+}
+
+/* Framer Motion friendly */
+.motion-safe {
+  @media (prefers-reduced-motion: reduce) {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Dashboard Sidebar */
+.sidebar {
+  background: #0a0a0a;
+  border-right: 1px solid var(--border);
+}
+
+/* Chat Bubbles */
+.chat-bubble-user {
+  background: var(--gold);
+  color: #0a0a0a;
+  border-radius: 20px 20px 4px 20px;
+}
+
+.chat-bubble-ai {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 20px 20px 20px 4px;
+}
+
+/* Progress Bars */
+.progress-bar {
+  transition: width 800ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Table / List Polish */
+.resume-row {
+  transition: all 0.1s ease;
+}
+
+.resume-row:hover {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+/* Responsive Typography */
+h1, .h1 {
+  font-size: clamp(2.75rem, 5vw, 4.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  font-weight: 600;
+}
+
+h2, .h2 {
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  letter-spacing: -0.025em;
+}
+
+/* Subtle Grid Background (hero) */
+.grid-bg {
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Floating AI Orb Animation */
+.ai-orb {
+  animation: orb-float 6s ease-in-out infinite;
+}
+
+@keyframes orb-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.02); }
+}
+
+/* Scrollbar (dark premium) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gold);
+}
+
+/* Focus Visible */
+*:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .card {
+    padding: 1.5rem;
+    border-radius: 20px;
+  }
 }

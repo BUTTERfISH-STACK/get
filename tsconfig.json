@@ -19,7 +19,15 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./lib/*"],
+      "@/ai/*": ["./ai/*"],
+      "@/app/*": ["./app/*"],
+      "@/types/*": ["./types/*"],
+      "@/hooks/*": ["./hooks/*"],
+      "@/utils/*": ["./utils/*"],
+      "@/prisma/*": ["./app/generated/prisma/*"]
     }
   },
   "include": [

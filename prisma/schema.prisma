@@ -1,0 +1,229 @@
+// Prisma schema for Vellon AI - Production SaaS
+// Full scalable schema for CV optimization platform with AI, billing, chats
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  // URL is configured in prisma.config.ts (Prisma 7+ requirement)
+}
+
+enum Plan {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+enum ResumeStatus {
+  DRAFT
+  OPTIMIZED
+  EXPORTED
+}
+
+enum ExportFormat {
+  PDF
+  DOCX
+  TXT
+}
+
+enum TaskType {
+  ATS_ANALYSIS
+  CV_REWRITE
+  CV_GENERATE
+  JOB_MATCH
+  COVER_LETTER
+  CAREER_COACH
+  SKILL_EXTRACT
+  LINKEDIN_OPTIMIZE
+  SUMMARY_GENERATE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  clerkId       String    @unique
+  email         String    @unique
+  name          String?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  resumes       Resume[]
+  subscriptions Subscription[]
+  aiUsages      AIUsage[]
+  exports       Export[]
+  chats         Chat[]
+  jobMatches    JobMatch[]
+
+  @@index([clerkId])
+  @@index([email])
+}
+
+model Resume {
+  id               String         @id @default(cuid())
+  userId           String
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title            String
+  originalFileName String?
+  originalFileUrl  String?
+  originalText     String         @db.Text
+  parsedData       Json
+  status           ResumeStatus   @default(DRAFT)
+  currentVersionId String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  versions       ResumeVersion[]
+  atsScores      ATSScore[]
+  jobMatches     JobMatch[]
+  exports        Export[]
+  chats          Chat[]
+  currentVersion ResumeVersion? @relation("CurrentVersion", fields: [currentVersionId], references: [id])
+
+  @@index([userId, updatedAt])
+  @@index([status])
+}
+
+model ResumeVersion {
+  id          String   @id @default(cuid())
+  resumeId    String
+  resume      Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  versionName String
+  layoutType  String
+  content     Json
+  aiModel     String?
+  atsScoreId  String?  @unique
+  createdAt   DateTime @default(now())
+
+  resumeAsCurrent Resume[]    @relation("CurrentVersion")
+  atsScore        ATSScore?   @relation("ResumeVersionToATSScore")
+  exports         Export[]
+
+  @@index([resumeId, createdAt])
+}
+
+model ATSScore {
+  id                   String   @id @default(cuid())
+  resumeId             String
+  resume               Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  versionId            String?  @unique
+  version              ResumeVersion? @relation("ResumeVersionToATSScore", fields: [versionId], references: [id])
+  overallScore         Int
+  keywordScore         Int
+  readabilityScore     Int
+  structureScore       Int
+  formattingScore      Int
+  keywordsFound        Json
+  missingKeywords      Json
+  suggestions          Json
+  recruiterReadability Float?
+  createdAt            DateTime @default(now())
+
+  @@index([resumeId])
+}
+
+model JobMatch {
+  id                   String   @id @default(cuid())
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resumeId             String?
+  resume               Resume?  @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+  jobTitle             String
+  jobCompany           String?
+  jobDescription       String   @db.Text
+  matchScore           Int
+  matchedSkills        Json
+  missingSkills        Json
+  keywordOverlap       Float
+  aiAnalysis           Json
+  generatedCoverLetter String?  @db.Text
+  createdAt            DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([resumeId])
+}
+
+model Subscription {
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                  Plan     @default(FREE)
+  stripeCustomerId      String?  @unique
+  stripeSubscriptionId  String?  @unique
+  status                String
+  currentPeriodEnd      DateTime?
+  rewritesUsed          Int      @default(0)
+  exportsUsed           Int      @default(0)
+  aiChatsUsed           Int      @default(0)
+  jobMatchesUsed        Int      @default(0)
+  lastReset             DateTime @default(now())
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@index([userId])
+  @@index([stripeCustomerId])
+}
+
+model AIUsage {
+  id         String    @id @default(cuid())
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  model      String
+  taskType   TaskType
+  tokensIn   Int?
+  tokensOut  Int?
+  durationMs Int?
+  success    Boolean   @default(true)
+  error      String?
+  createdAt  DateTime  @default(now())
+
+  @@index([userId, createdAt])
+  @@index([model])
+}
+
+model Export {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resumeId      String?
+  resume        Resume?       @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+  versionId     String?
+  version       ResumeVersion? @relation(fields: [versionId], references: [id], onDelete: SetNull)
+  format        ExportFormat
+  fileUrl       String?
+  fileName      String
+  isWatermarked Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model Chat {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  resumeId  String?
+  resume    Resume?   @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  messages  Message[]
+
+  @@index([userId, updatedAt])
+}
+
+model Message {
+  id          String   @id @default(cuid())
+  chatId      String
+  chat        Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  role        String
+  content     String   @db.Text
+  model       String?
+  attachments Json?
+  createdAt   DateTime @default(now())
+
+  @@index([chatId, createdAt])
+}
