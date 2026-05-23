@@ -37,14 +37,10 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Webpack config for pdf-parse (node only) and mammoth compatibility
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      // pdf-parse and mammoth are server-only
-      config.externals = [...(config.externals || []), "canvas"];
-    }
-    return config;
-  },
+  // Turbopack configuration (Next.js 16 default)
+  // We removed the custom webpack block because Turbopack does not support it.
+  // pdf-parse + mammoth are only used on the server side (API routes / Server Actions)
+  turbopack: {},
 
   // Headers for security + performance (production)
   async headers() {

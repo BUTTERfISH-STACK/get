@@ -1,9 +1,16 @@
 "use client";
 
 import React, { useState } from "react";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import dynamic from "next/dynamic";
 import { PDFResumeTemplate } from "@/components/PDFResumeTemplate";
 import { ParsedResume } from "@/types/resume";
+
+// Dynamically import PDFDownloadLink to avoid server-side prerender errors
+// (react-pdf is browser-only)
+const PDFDownloadLink = dynamic(
+  () => import("@react-pdf/renderer").then((mod) => mod.PDFDownloadLink),
+  { ssr: false }
+);
 
 const sampleResume: ParsedResume = {
   personal: {

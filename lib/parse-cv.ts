@@ -1,17 +1,19 @@
-import * as pdfParseModule from "pdf-parse";
-const pdfParse = (pdfParseModule as any).default || pdfParseModule;
 import mammoth from "mammoth";
 import { ParsedResume, PersonalInfo } from "@/types/resume";
 
 /**
  * Production-grade CV text extractor
  * Supports: PDF, DOCX, TXT, MD
+ * Uses dynamic import for pdf-parse to avoid Turbopack/webpack build issues
  */
 export async function extractTextFromFile(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
   const ext = file.name.split(".").pop()?.toLowerCase();
 
   if (ext === "pdf") {
+    // Dynamic import avoids build-time resolution problems with pdf-parse
+    const pdfParseModule: any = await import("pdf-parse");
+    const pdfParse = pdfParseModule.default || pdfParseModule;
     const data = await pdfParse(buffer);
     return data.text;
   }
@@ -21,7 +23,7 @@ export async function extractTextFromFile(file: File): Promise<string> {
     return result.value;
   }
 
-  // Plain text / md
+  // Plain text / md / fallback
   return buffer.toString("utf-8");
 }
 
@@ -29,7 +31,6 @@ export async function extractTextFromFile(file: File): Promise<string> {
 export function parseResumeText(rawText: string): ParsedResume {
   const lines = rawText.split("\n").map(l => l.trim()).filter(Boolean);
 
-  // Naive but effective extraction for demo (full version uses Ollama for deep parse)
   const personal: PersonalInfo = {
     fullName: lines[0] || "Professional",
     email: lines.find(l => l.includes("@")) || "you@email.com",
