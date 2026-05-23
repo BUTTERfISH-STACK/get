@@ -4,9 +4,10 @@ import { z } from "zod";
 // Throws at build/start if required vars missing. Perfect for production.
 
 const envSchema = z.object({
-  // Clerk
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
-  CLERK_SECRET_KEY: z.string().min(1),
+  // Clerk (optional now - auth is disabled for instant access)
+  // Set these only if you want to re-enable login / Pro accounts later
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
+  CLERK_SECRET_KEY: z.string().optional(),
   CLERK_WEBHOOK_SECRET: z.string().optional(),
 
   // App
