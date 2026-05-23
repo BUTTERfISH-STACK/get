@@ -73,13 +73,8 @@ export function getOptimalModel(task: TaskType | string): string {
 // Core secure fetch wrapper to Ollama
 // API key is now optional — allows connecting to open, unauthenticated Ollama instances
 async function ollamaFetch(endpoint: string, body: any, stream = false) {
-  if (!env.OLLAMA_BASE_URL) {
-    throw new Error(
-      "OLLAMA_BASE_URL is not configured. Please set it to your Ollama server address."
-    );
-  }
-
-  const url = `${env.OLLAMA_BASE_URL}/api/${endpoint}`;
+  // Always go through our own proxy to avoid CORS and "Failed to fetch" issues on Vercel
+  const url = `/api/ollama/${endpoint}`;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 120000); // 2min timeout
 

@@ -36,8 +36,10 @@ export default function AICareerCoach() {
         });
       }
     } catch (e: any) {
-      const msg = e?.message || "Could not reach Ollama server.";
-      setMessages(prev => [...prev, { role: "assistant", content: `Error: ${msg}\n\nPlease check that your OLLAMA_BASE_URL is set correctly and the server is reachable (no API key required if your Ollama is open).` }]);
+      setMessages(prev => [...prev, { 
+        role: "assistant", 
+        content: "Sorry, I couldn't reach the AI server right now.\n\nPlease ensure `OLLAMA_BASE_URL` is set correctly in your environment variables." 
+      }]);
     } finally {
       setIsStreaming(false);
     }
