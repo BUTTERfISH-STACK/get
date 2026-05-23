@@ -1,21 +1,22 @@
 import mammoth from "mammoth";
+import { extractText } from "unpdf"; // Reliable PDF text extraction for Vercel/Next.js
 import { ParsedResume, PersonalInfo } from "@/types/resume";
 
 /**
  * Production-grade CV text extractor
  * Supports: PDF, DOCX, TXT, MD
- * Uses dynamic import for pdf-parse to avoid Turbopack/webpack build issues
  */
 export async function extractTextFromFile(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
   const ext = file.name.split(".").pop()?.toLowerCase();
 
   if (ext === "pdf") {
-    // Dynamic import avoids build-time resolution problems with pdf-parse
-    const pdfParseModule: any = await import("pdf-parse");
-    const pdfParse = pdfParseModule.default || pdfParseModule;
-    const data = await pdfParse(buffer);
-    return data.text;
+    // unpdf is stable and works well in serverless environments
+    const result = await extractText(new Uint8Array(buffer));
+    const extractedText = Array.isArray(result.text) 
+      ? result.text.join("\n") 
+      : result.text;
+    return extractedText;
   }
 
   if (ext === "docx") {
