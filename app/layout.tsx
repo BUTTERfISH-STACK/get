@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -61,38 +60,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      appearance={{
-        elements: {
-          formButtonPrimary:
-            "bg-[#C5A46E] hover:bg-[#B38B4F] text-black font-semibold",
-          card: "bg-zinc-950 border border-white/10 shadow-2xl",
-        },
-      }}
+    <html
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} h-full antialiased dark`}
     >
-      <html
-        lang="en"
-        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} h-full antialiased dark`}
-      >
-        <body className="min-h-full flex flex-col bg-[#0a0a0a] text-white font-sans">
-          {children}
+      <body className="min-h-full flex flex-col bg-[#0a0a0a] text-white font-sans">
+        {children}
 
-          {/* Premium Toast Notifications */}
-          <Toaster
-            position="top-center"
-            richColors
-            closeButton
-            className="font-sans"
-            toastOptions={{
-              style: {
-                background: "#111111",
-                border: "1px solid rgba(255,255,255,0.1)",
-                color: "#fff",
-              },
-            }}
-          />
-        </body>
-      </html>
-    </ClerkProvider>
+        {/* Premium Toast Notifications */}
+        <Toaster
+          position="top-center"
+          richColors
+          closeButton
+          className="font-sans"
+          toastOptions={{
+            style: {
+              background: "#111111",
+              border: "1px solid rgba(255,255,255,0.1)",
+              color: "#fff",
+            },
+          }}
+        />
+      </body>
+    </html>
   );
 }

@@ -5,9 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, FileText, Target, MessageSquare, 
-  Briefcase, Download, Settings, LogOut, Zap 
+  Download, Settings, Zap 
 } from "lucide-react";
-import { SignOutButton } from "@clerk/nextjs";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -57,11 +56,10 @@ export default function DashboardSidebar() {
           <Zap className="w-4 h-4" /> Powered by Ollama
         </div>
         
-        <SignOutButton>
-          <button className="flex w-full items-center gap-2 text-[#a1a1aa] hover:text-white py-2">
-            <LogOut className="w-4 h-4" /> Sign out
-          </button>
-        </SignOutButton>
+        <div className="text-[#71717a]">
+          Your work stays in this browser.<br />
+          Export anytime. No account needed.
+        </div>
       </div>
     </div>
   );

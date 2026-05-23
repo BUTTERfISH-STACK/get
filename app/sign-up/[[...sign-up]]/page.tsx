@@ -1,9 +1,10 @@
-import { SignUp } from "@clerk/nextjs";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export default function SignUpPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] p-6">
-      <div className="w-full max-w-[440px]">
+      <div className="max-w-md text-center">
         <div className="flex justify-center mb-8">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#C5A46E] to-[#A37F3D] flex items-center justify-center">
@@ -13,23 +14,21 @@ export default function SignUpPage() {
           </div>
         </div>
 
-        <SignUp 
-          appearance={{
-            elements: {
-              card: "bg-zinc-950 border border-white/10 shadow-2xl",
-              headerTitle: "text-white text-2xl",
-              headerSubtitle: "text-[#a1a1aa]",
-              formButtonPrimary: "bg-[#C5A46E] hover:bg-[#A37F3D] text-black font-semibold",
-            },
-          }}
-          path="/sign-up"
-          routing="path"
-          signInUrl="/sign-in"
-        />
-
-        <p className="text-center text-xs text-[#71717a] mt-8">
-          Start your 14-day Pro trial. No card required for Free plan.
+        <h1 className="text-3xl font-semibold tracking-tight mb-4">Instant access. No signup.</h1>
+        <p className="text-[#a1a1aa] text-lg mb-8">
+          Everything works right now. Upload your CV, get elite AI analysis, export beautiful PDFs — no account required.
         </p>
+
+        <Link 
+          href="/dashboard" 
+          className="btn-gold inline-flex items-center gap-3 px-8 py-3.5 rounded-2xl text-lg"
+        >
+          Start Using Vellon <ArrowRight />
+        </Link>
+
+        <div className="mt-8 text-xs text-[#71717a]">
+          Pro features &amp; cloud saving available soon.
+        </div>
       </div>
     </div>
   );

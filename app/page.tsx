@@ -7,11 +7,9 @@ import {
   FileText, Target, MessageSquare, Download, TrendingUp 
 } from "lucide-react";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
 
-// Premium Landing for Vellon AI
+// Premium Landing for Vellon AI — No login required (instant access)
 export default function VellonLanding() {
-  const { isSignedIn } = useUser();
   const { scrollYProgress } = useScroll();
   const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.6]);
 
@@ -141,26 +139,12 @@ export default function VellonLanding() {
           </div>
 
           <div className="flex items-center gap-4">
-            {isSignedIn ? (
-              <Link 
-                href="/dashboard" 
-                className="btn-gold px-6 py-2.5 rounded-full text-sm flex items-center gap-2"
-              >
-                Go to Dashboard <ArrowRight className="w-4 h-4" />
-              </Link>
-            ) : (
-              <>
-                <Link href="/sign-in" className="text-sm font-medium px-5 py-2 hover:text-[#C5A46E] transition">
-                  Log in
-                </Link>
-                <Link 
-                  href="/sign-up" 
-                  className="btn-gold px-6 py-2.5 rounded-full text-sm flex items-center gap-2"
-                >
-                  Start Free <ArrowRight className="w-4 h-4" />
-                </Link>
-              </>
-            )}
+            <Link 
+              href="/dashboard" 
+              className="btn-gold px-6 py-2.5 rounded-full text-sm flex items-center gap-2"
+            >
+              Launch Vellon <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </nav>
@@ -181,13 +165,13 @@ export default function VellonLanding() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link 
-              href={isSignedIn ? "/dashboard" : "/sign-up"}
-              className="btn-gold group flex items-center justify-center gap-3 px-10 py-4 rounded-2xl text-lg font-semibold w-full sm:w-auto"
-            >
-              {isSignedIn ? "Open Dashboard" : "Start Optimizing Free"}
-              <ArrowRight className="group-hover:translate-x-0.5 transition" />
-            </Link>
+              <Link 
+                href="/dashboard"
+                className="btn-gold group flex items-center justify-center gap-3 px-10 py-4 rounded-2xl text-lg font-semibold w-full sm:w-auto"
+              >
+                Launch Vellon Now
+                <ArrowRight className="group-hover:translate-x-0.5 transition" />
+              </Link>
             <a 
               href="#demo" 
               className="btn-ghost flex items-center justify-center gap-3 px-10 py-4 rounded-2xl text-lg font-medium w-full sm:w-auto"
@@ -350,7 +334,7 @@ export default function VellonLanding() {
                 </ul>
 
                 <Link 
-                  href={isSignedIn ? "/dashboard" : "/sign-up"} 
+                  href="/dashboard" 
                   className={`mt-8 block text-center py-3.5 rounded-2xl font-semibold transition ${tier.popular ? "btn-gold" : "btn-ghost"}`}
                 >
                   {tier.cta}
@@ -391,10 +375,10 @@ export default function VellonLanding() {
           <p className="text-2xl text-[#a1a1aa]">Join thousands of ambitious professionals who chose excellence.</p>
 
           <Link 
-            href={isSignedIn ? "/dashboard" : "/sign-up"}
+            href="/dashboard"
             className="mt-10 inline-flex btn-gold px-12 py-4 rounded-2xl text-xl items-center gap-4 group"
           >
-            {isSignedIn ? "Open your dashboard" : "Get started for free"}
+            Launch Vellon — Start Free
             <ArrowRight className="group-hover:translate-x-1 transition" />
           </Link>
 
