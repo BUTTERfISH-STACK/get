@@ -15,6 +15,9 @@ export async function POST(
   const pathStr = path.join("/");
   const targetUrl = `${env.OLLAMA_BASE_URL}/api/${pathStr}`;
 
+  // Debug log - shows exactly what the server thinks OLLAMA_BASE_URL is
+  console.log(`[Ollama Debug] Using OLLAMA_BASE_URL = ${env.OLLAMA_BASE_URL}`);
+
   if (!env.OLLAMA_BASE_URL) {
     return new Response(
       JSON.stringify({ 
