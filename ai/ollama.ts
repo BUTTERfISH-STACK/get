@@ -14,7 +14,7 @@ import type { ResumeLayout } from "@/types/resume";
 // TaskType from Prisma schema (we use string union for flexibility with new Prisma client)
 type TaskType = string;
 
-export type AIModel = "qwen2.5:7b" | "llama3.1:8b" | "deepseek-r1:7b" | "mistral" | "codellama:7b";
+export type AIModel = string; // Now dynamic from .env configuration
 
 export interface OllamaMessage {
   role: "system" | "user" | "assistant";
@@ -35,26 +35,50 @@ export interface AIResponse {
   usage?: { prompt_tokens?: number; completion_tokens?: number };
 }
 
-// Task to optimal model mapping (as per requirements)
-const MODEL_ROUTER: Record<TaskType | string, AIModel> = {
-  ATS_ANALYSIS: "qwen2.5:7b",      // Fast + excellent at structured extraction
-  SKILL_EXTRACT: "qwen2.5:7b",
-  CV_REWRITE: "llama3.1:8b",       // Strong reasoning + human-like rewrites
-  CV_GENERATE: "llama3.1:8b",
-  JOB_MATCH: "llama3.1:8b",
-  COVER_LETTER: "llama3.1:8b",
-  CAREER_COACH: "deepseek-r1:7b",  // Excellent for conversational coaching
-  SUMMARY_GENERATE: "mistral",
-  LINKEDIN_OPTIMIZE: "qwen2.5:7b",
-  default: "qwen2.5:7b",
+// Task to optimal model mapping — now driven by your .env configuration
+// You can change the models in .env and they will be respected automatically
+const getModelForTask = (task: TaskType | string): string => {
+  const fast = env.OLLAMA_MODEL_FAST;
+  const deep = env.OLLAMA_MODEL_DEEP;
+  const chat = env.OLLAMA_MODEL_CHAT;
+
+  switch (task) {
+    // Fast & structured tasks
+    case "ATS_ANALYSIS":
+    case "SKILL_EXTRACT":
+    case "LINKEDIN_OPTIMIZE":
+      return fast;
+
+    // Deep reasoning / generation tasks
+    case "CV_REWRITE":
+    case "CV_GENERATE":
+    case "JOB_MATCH":
+    case "COVER_LETTER":
+    case "SUMMARY_GENERATE":
+      return deep;
+
+    // Conversational / coaching
+    case "CAREER_COACH":
+      return chat;
+
+    default:
+      return fast;
+  }
 };
 
-export function getOptimalModel(task: TaskType | string): AIModel {
-  return MODEL_ROUTER[task] || MODEL_ROUTER.default;
+export function getOptimalModel(task: TaskType | string): string {
+  return getModelForTask(task);
 }
 
 // Core secure fetch wrapper to Ollama
 async function ollamaFetch(endpoint: string, body: any, stream = false) {
+  if (!env.OLLAMA_API_KEY) {
+    throw new Error(
+      "Vellon AI is not connected to an Ollama server. " +
+      "Please set OLLAMA_BASE_URL and OLLAMA_API_KEY in your environment to enable AI features."
+    );
+  }
+
   const url = `${env.OLLAMA_BASE_URL}/api/${endpoint}`;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 120000); // 2min timeout
@@ -64,7 +88,7 @@ async function ollamaFetch(endpoint: string, body: any, stream = false) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${env.OLLAMA_API_KEY}`, // Secure your Ollama server with this!
+        "Authorization": `Bearer ${env.OLLAMA_API_KEY}`,
         "X-Vellon-Client": "production",
       },
       body: JSON.stringify(body),

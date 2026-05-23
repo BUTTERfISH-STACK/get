@@ -18,9 +18,10 @@ const envSchema = z.object({
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   SUPABASE_STORAGE_BUCKET: z.string().default("resumes"),
 
-  // Ollama AI (critical - must be set to your separate server)
+  // Ollama AI (required at RUNTIME for AI features to work)
+  // During build these can be empty — we validate at call time instead.
   OLLAMA_BASE_URL: z.string().url().default("http://localhost:11434"),
-  OLLAMA_API_KEY: z.string().min(1, "OLLAMA_API_KEY is required for secure access to your Ollama server"),
+  OLLAMA_API_KEY: z.string().optional(),
   OLLAMA_MODEL_FAST: z.string().default("qwen2.5:7b"),
   OLLAMA_MODEL_DEEP: z.string().default("llama3.1:8b"),
   OLLAMA_MODEL_CHAT: z.string().default("deepseek-r1:7b"),
