@@ -27,6 +27,11 @@ export async function POST(
   try {
     const body = await req.text();
 
+    // Log for local debugging - shows it's hitting your local Ollama
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[Ollama Proxy] Forwarding to: ${targetUrl}`);
+    }
+
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
